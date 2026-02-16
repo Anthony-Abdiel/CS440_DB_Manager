@@ -10,8 +10,3 @@ export function employeeRoutes(controller: EmployeesController) {
 
     return router;
 }
-
-//GET ROUTE
-
-
-//DELETE ROUTE
