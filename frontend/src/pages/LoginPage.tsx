@@ -1,26 +1,17 @@
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import React, { useState, type FormEvent, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../UserContext";
 
-// Define strict types for the User role
-type UserRole = "admin" | "employee";
-
-// Define the shape of the User object
-interface UserData {
-  name: string;
-  role: UserRole;
-  id: number | null;
-}
+type LoginResponse = {
+  ok: boolean;
+};
 
 function Login() {
-  // State variables with Types
-  const [name, setName] = useState<string>("");
-  const [employeeId, setEmployeeId] = useState<string>("");
-  const [role, setRole] = useState<UserRole>("employee");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { login } = useUser();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -28,123 +19,134 @@ function Login() {
     setError("");
     setIsLoading(true);
 
-    // Validation
-    if (!name.trim()) {
-      setError("Name is required.");
+    // Basic validation
+    if (!username.trim() || !password.trim()) {
+      setError("Username and password are required.");
       setIsLoading(false);
       return;
     }
-    if (role === "employee" && !employeeId.trim()) {
-      setError("Employee ID is required for employee login.");
-      setIsLoading(false);
-      return;
-    }
-
-    // Construct the payload
-    const payload: UserData = {
-      name: name.trim(),
-      role: role,
-      id: role === "employee" ? Number(employeeId) : null,
-    };
 
     try {
-      // Execute the POST request to /login
-      const response = await fetch("/login", {
+      // If you're running Vite on :5173 and backend on :3000,
+      // you'll probably need the full URL OR a Vite proxy.
+      const response = await fetch("http://localhost:3000/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username.trim(),
+          password: password.trim(),
+        }),
       });
 
+      // Option A: your backend returns 401 with empty body
       if (!response.ok) {
-        throw new Error("Login failed. Please check credentials.");
+        setError("Invalid credentials.");
+        return;
       }
 
-      // If the API call is successful, update the Context
-      // (Assuming the API returns the user object or we use the payload)
-      // const data = await response.json(); 
-      
-      login(payload); 
-
-      // Navigation logic based on role
-      if (role === "admin") {
-        navigate("/employees");
-      } else {
-        navigate("/profile");
+      // Option B: if backend returns JSON { ok: true }
+      let data: LoginResponse | null = null;
+      try {
+        data = (await response.json()) as LoginResponse;
+      } catch {
+        // If your backend sends no JSON, ignore
       }
+
+      if (data && data.ok === false) {
+        setError("Invalid credentials.");
+        return;
+      }
+
+      // Success, go to employees page
+      navigate("/employees");
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred.");
-      }
+      if (err instanceof Error) setError(err.message);
+      else setError("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleRoleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    // Type assertion to ensure the value is treated as UserRole
-    setRole(e.target.value as UserRole);
+  const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+  <div
+    style={{
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "24px",
+    }}
+  >
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "420px",
+        border: "1px solid #ddd",
+        borderRadius: "12px",
+        padding: "24px",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+      }}
+    >
+      <h1 style={{ marginTop: 0, textAlign: "center" }}>Login</h1>
+
+      {error && (
+        <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+      )}
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            Name
-            <br />
+        <div style={{ marginBottom: "12px" }}>
+          <label style={{ display: "block" }}>
+            Username
             <input
+              style={{ width: "100%", padding: "10px", marginTop: "6px", boxSizing: "border-box" }}
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={username}
+              onChange={handleUsernameChange}
               required
               disabled={isLoading}
+              autoComplete="username"
             />
           </label>
         </div>
 
-        <div>
-          <label>
-            Role
-            <br />
-            <select 
-              value={role} 
-              onChange={handleRoleChange}
+        <div style={{ marginBottom: "16px" }}>
+          <label style={{ display: "block" }}>
+            Password
+            <input
+              style={{ width: "100%", padding: "10px", marginTop: "6px", boxSizing: "border-box" }}
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
               disabled={isLoading}
-            >
-              <option value="admin">Admin</option>
-              <option value="employee">Employee</option>
-            </select>
+              autoComplete="current-password"
+            />
           </label>
         </div>
 
-        {role === "employee" && (
-          <div>
-            <label>
-              Employee ID
-              <br />
-              <input
-                type="number"
-                value={employeeId}
-                onChange={(e) => setEmployeeId(e.target.value)}
-                disabled={isLoading}
-              />
-            </label>
-          </div>
-        )}
-
-        <button type="submit" disabled={isLoading}>
+        <button
+          type="submit"
+          disabled={isLoading}
+          style={{
+            width: "100%",
+            padding: "10px",
+            cursor: isLoading ? "not-allowed" : "pointer",
+          }}
+        >
           {isLoading ? "Logging in..." : "Log In"}
         </button>
       </form>
     </div>
-  );
+  </div>
+);
 }
 
 export default Login;

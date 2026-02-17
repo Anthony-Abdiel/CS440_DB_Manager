@@ -11,11 +11,19 @@ import { LoginService } from "./services/login_services";
 import { LoginController } from "./controllers/login_controller";
 import { loginRoutes } from "./routes/login_routes";
 
+import cors from "cors";
+
 //creating the express app
 const app = express();
 app.use(express.json());
 
 const PORT = 3000;
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+
 
 //manually wiring dependencies
 const employeeRepo = new SqliteEmployeeRepo();

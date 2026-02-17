@@ -1,6 +1,5 @@
-import Database from "better-sqlite3";
+// src/db/sqlite.ts
+import { Database } from "bun:sqlite";
 
 export const db = new Database("dbManagerApp.sqlite");
-
-db.pragma("foreign_keys = ON");
-
+db.run("PRAGMA foreign_keys = ON;");

@@ -3,7 +3,7 @@ import type {User, UserRepo} from "../users_repo";
 
 export class SqliteUserRepo implements UserRepo {
     findByUsername(username: string): User | undefined {
-        const stmt = db.prepare(`
+        const stmt = db.query(`
             SELECT id, username, password FROM users WHERE username = ?`
         );
         const success = stmt.get(username) as User | undefined;

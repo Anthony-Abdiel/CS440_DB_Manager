@@ -1,7 +1,7 @@
 import {db} from "./sqlite";
 
 export function initSchema() {
-    db.exec(`
+    db.run(`
   CREATE TABLE IF NOT EXISTS employees (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -15,7 +15,7 @@ export function initSchema() {
   );
 `);
 
-db.prepare(`
+db.query(`
     INSERT INTO users (username, password)
     SELECT 'Admin123', 'password123'
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'Admin123');

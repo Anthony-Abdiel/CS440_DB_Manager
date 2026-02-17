@@ -1,9 +1,12 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: none !important;
+  width: 100vw !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: initial !important;
 }
+
 
 .logo {
   height: 6em;
@@ -39,4 +42,10 @@
 
 .read-the-docs {
   color: #888;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
