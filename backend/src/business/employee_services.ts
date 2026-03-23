@@ -1,4 +1,4 @@
-import type {Employee, EmployeeRepo} from "../repos/employee_repo";
+import type {Employee, EmployeeRepo} from "../../data/employee_repo";
 
 export type CreateEmployeeInput = Omit<Employee, "id">;
 

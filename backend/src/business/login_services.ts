@@ -1,4 +1,4 @@
-import type { User, UserRepo } from "../repos/users_repo";
+import type { User, UserRepo } from "../../data/users_repo";
 
 
 export class LoginService {

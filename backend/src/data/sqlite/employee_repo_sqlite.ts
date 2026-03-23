@@ -1,4 +1,4 @@
-import { db } from "../../db/sqlite";
+import { db } from "../db/sqlite";
 import type { Employee, EmployeeRepo } from "../employee_repo";
 
 export class SqliteEmployeeRepo implements EmployeeRepo {

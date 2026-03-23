@@ -1,15 +1,16 @@
-import { initSchema } from "./db/initSchema";
+import { initSchema } from "./data/db/initSchema";
 import express from "express";
 
-import { SqliteEmployeeRepo } from "./repos/sqlite/employee_repo_sqlite";
-import { EmployeeService } from "./services/employee_services";
-import { EmployeesController } from "./controllers/employees_controller";
-import {employeeRoutes} from "./routes/employee_routes";
+import { SqliteEmployeeRepo } from "./data/sqlite/employee_repo_sqlite";
+import { EmployeeService } from "./business/employee_services";
+import { EmployeesController } from "./presentation/controllers/employees_controller";
+import {employeeRoutes} from "./presentation/routes/employee_routes";
 
-import { SqliteUserRepo } from "./repos/sqlite/users_repo_sqlite";
-import { LoginService } from "./services/login_services";
-import { LoginController } from "./controllers/login_controller";
-import { loginRoutes } from "./routes/login_routes";
+import { SqliteUserRepo } from "./data/sqlite/users_repo_sqlite";
+import { LoginService } from "./business/login_services";
+import { LoginController } from "./presentation/controllers/login_controller";
+
+import { loginRoutes } from "./presentation/routes/login_routes";
 
 import cors from "cors";
 
