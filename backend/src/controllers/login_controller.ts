@@ -1,9 +1,11 @@
-import { LoginService } from "../services/login_services";
+//backend/src/controllers/login_controller.ts
+
+import { UserModel } from "../models/user_model";
 import type {Request, Response} from  "express";
 
 
 export class LoginController {
-    constructor(private loginService: LoginService){}
+    constructor(private userModel: UserModel){}
 
     validate = (req: Request, res: Response) => {
         const {username, password} = req.body;
@@ -12,7 +14,7 @@ export class LoginController {
             return res.status(401).json({error: "Missing Credentials!"});
         }
 
-        const valid = this.loginService.validateCredentials(username, password);
+        const valid = this.userModel.validateCredentials(username, password);
 
         if(!valid) {
             return res.status(401).json({ok: false});

@@ -1,15 +1,16 @@
+//backend/src/server.ts
+
 import { initSchema } from "./db/initSchema";
 import express from "express";
 
-import { SqliteEmployeeRepo } from "./repos/sqlite/employee_repo_sqlite";
-import { EmployeeService } from "./services/employee_services";
 import { EmployeesController } from "./controllers/employees_controller";
 import {employeeRoutes} from "./routes/employee_routes";
 
-import { SqliteUserRepo } from "./repos/sqlite/users_repo_sqlite";
-import { LoginService } from "./services/login_services";
 import { LoginController } from "./controllers/login_controller";
 import { loginRoutes } from "./routes/login_routes";
+
+import { EmployeeModel } from "./models/employee_models";
+import { UserModel } from "./models/user_model";
 
 import cors from "cors";
 
@@ -26,13 +27,11 @@ app.use(cors({
 
 
 //manually wiring dependencies
-const employeeRepo = new SqliteEmployeeRepo();
-const employeeService = new EmployeeService(employeeRepo);
-const employeesController = new EmployeesController(employeeService);
+const employeeModel = new EmployeeModel();
+const userModel = new UserModel();
 
-const userRepo = new SqliteUserRepo();
-const loginService = new LoginService(userRepo);
-const loginController = new LoginController(loginService);
+const loginController = new LoginController(userModel);
+const employeesController = new EmployeesController(employeeModel);
 
 //setting up the database with the Users and Employees tables
 initSchema();
