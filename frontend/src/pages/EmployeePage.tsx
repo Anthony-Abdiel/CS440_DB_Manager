@@ -27,7 +27,7 @@ function EmployeePage() {
     try {
       setLoading(true);
       setError("");
-      const response = await fetch("http://localhost:3000/employees");
+      const response = await fetch("http://localhost:3002/employees");
 
       if (!response.ok) {
         throw new Error("Failed to fetch employees");
@@ -48,7 +48,7 @@ function EmployeePage() {
     setSuccessMessage("");
 
     try {
-      const response = await fetch("http://localhost:3000/employees", {
+      const response = await fetch("http://localhost:3002/employees", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +78,7 @@ function EmployeePage() {
     try {
       setError("");
       setSuccessMessage("");
-      const response = await fetch(`http://localhost:3000/employees/${id}`, {
+      const response = await fetch(`http://localhost:3002/employees/${id}`, {
         method: "DELETE",
       });
 

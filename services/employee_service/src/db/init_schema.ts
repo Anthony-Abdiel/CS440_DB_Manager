@@ -1,4 +1,4 @@
-import {db} from "./sqlite";
+import {db} from "../../../shared/sqlite";
 
 export function initSchema() {
     db.run(`
@@ -6,12 +6,6 @@ export function initSchema() {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     email TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
-    password TEXT NOT NULL
   );
 `);
 

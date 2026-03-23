@@ -29,7 +29,7 @@ function Login() {
     try {
       // If you're running Vite on :5173 and backend on :3000,
       // you'll probably need the full URL OR a Vite proxy.
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("http://localhost:3001/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

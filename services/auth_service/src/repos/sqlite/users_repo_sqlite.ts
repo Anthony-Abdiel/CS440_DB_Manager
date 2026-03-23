@@ -1,4 +1,4 @@
-import {db} from "../../db/sqlite";
+import {db} from "../../../../shared/sqlite";
 import type {User, UserRepo} from "../users_repo";
 
 export class SqliteUserRepo implements UserRepo {

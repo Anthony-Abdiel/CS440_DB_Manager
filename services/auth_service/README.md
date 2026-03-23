@@ -1,4 +1,4 @@
-# backend
+# auth_service
 
 To install dependencies:
 
